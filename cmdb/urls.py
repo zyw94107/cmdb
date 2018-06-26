@@ -21,6 +21,6 @@ import xadmin
 urlpatterns = [
     # url(r'^admin/$', admin.site.urls),
     # url(r'^assets/', include('assets.urls')),
-    url(r'^assets', include('assets.urls')),
+    url(r'^assets/', include('assets.urls')),
     url(r'^xadmin/', xadmin.site.urls),
 ]
