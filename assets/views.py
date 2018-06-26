@@ -38,3 +38,5 @@ def report(request):
                 return HttpResponse(response)
         else:
             return HttpResponse("没有资产sn序列号，请检查数据！")
+    if request.method == "GET":
+        return HttpResponse("none")
