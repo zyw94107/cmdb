@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'assets',
     'xadmin',
     'crispy_forms',
-    'reversion',
 ]
 
 MIDDLEWARE = [
