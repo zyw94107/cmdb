@@ -1,5 +1,9 @@
+from django.http import HttpResponse
+
+from assets.xadmin_action import PassAction
 import xadmin
 from .models import NewAssetApprovalZone, Asset
+from xadmin.plugins.actions import BaseActionView
 
 
 class NewAssetAdmin(object):
@@ -9,6 +13,7 @@ class NewAssetAdmin(object):
     list_filter = ['asset_type', 'manufacturer', 'c_time']
     # 搜索
     search_field = ['sn']
+    actions = [PassAction]
 
 
 class AssetAdmin(object):

@@ -24,3 +24,13 @@ class NewAsset(object):
         models.NewAssetApprovalZone.objects.update_or_create(sn=self.data['sn'], defaults=default)
         return '资产已经加入或更新待审核区'
 
+
+class ApproveAsset:
+    """
+    资产审批上线
+    """
+    def __init__(self, qs):
+        self.sn = qs
+        print(qs.data)
+        # self.data = json.loads(qs.data)
+        # print(self.data)
