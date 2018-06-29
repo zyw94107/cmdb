@@ -20,5 +20,6 @@ class AssetAdmin(object):
     list_display = ['asset_type', 'name', 'status', 'approved_by', 'c_time', "m_time"]
 
 
+
 xadmin.site.register(NewAssetApprovalZone, NewAssetAdmin)
 xadmin.site.register(Asset, AssetAdmin)

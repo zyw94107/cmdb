@@ -21,7 +21,7 @@ class Asset(models.Model):
         (4, '备用'),
     )
     asset_type = models.CharField(choices=asset_type_choice, max_length=64, default='server', verbose_name="资产类型")
-    name = models.CharField(max_length=64, unique=True, verbose_name="资产名称")  # 不可重复
+    name = models.CharField(max_length=128, unique=True, verbose_name="资产名称")  # 不可重复
     sn = models.CharField(max_length=128, unique=True, verbose_name="资产序列号")  # 不可重复
     business_unit = models.ForeignKey('BusinessUnit', null=True, blank=True, verbose_name='所属业务线')
     status = models.SmallIntegerField(choices=asset_status, default=0, verbose_name='设备状态')
@@ -179,7 +179,7 @@ class Software(models.Model):
 
 class IDC(models.Model):
     """机房"""
-    name = models.CharField(max_length=64, unique=True, verbose_name="机房名称")
+    name = models.CharField(max_length=128, unique=True, verbose_name="机房名称")
     memo = models.CharField(max_length=128, blank=True, null=True, verbose_name='备注')
 
     def __str__(self):
@@ -193,7 +193,7 @@ class IDC(models.Model):
 class Manufacturer(models.Model):
     """厂商"""
 
-    name = models.CharField('厂商名称', max_length=64, unique=True)
+    name = models.CharField('厂商名称', max_length=128, unique=True)
     telephone = models.CharField('支持电话', max_length=30, blank=True, null=True)
     memo = models.CharField('备注', max_length=128, blank=True, null=True)
 
@@ -209,7 +209,7 @@ class BusinessUnit(models.Model):
     """业务线"""
 
     parent_unit = models.ForeignKey('self', blank=True, null=True, related_name='parent_level')
-    name = models.CharField('业务线', max_length=64, unique=True)
+    name = models.CharField('业务线', max_length=128, unique=True)
     memo = models.CharField('备注', max_length=64, blank=True, null=True)
 
     def __str__(self):
@@ -224,7 +224,7 @@ class Contract(models.Model):
     """合同"""
 
     sn = models.CharField('合同号', max_length=128, unique=True)
-    name = models.CharField('合同名称', max_length=64)
+    name = models.CharField('合同名称', max_length=128)
     memo = models.TextField('备注', blank=True, null=True)
     price = models.IntegerField('合同金额')
     detail = models.TextField('合同详细', blank=True, null=True)
@@ -244,7 +244,7 @@ class Contract(models.Model):
 
 class Tag(models.Model):
     """标签"""
-    name = models.CharField('标签名', max_length=32, unique=True)
+    name = models.CharField('标签名', max_length=128, unique=True)
     c_day = models.DateField('创建日期', auto_now_add=True)
 
     def __str__(self):
@@ -322,7 +322,7 @@ class NIC(models.Model):
     """网卡组件"""
 
     asset = models.ForeignKey('Asset')  # 注意要用外键
-    name = models.CharField('网卡名称', max_length=64, blank=True, null=True)
+    name = models.CharField('网卡名称', max_length=128, blank=True, null=True)
     model = models.CharField('网卡型号', max_length=128)
     mac = models.CharField('MAC地址', max_length=64)  # 虚拟机有可能会出现同样的mac地址
     ip_address = models.GenericIPAddressField('IP地址', blank=True, null=True)

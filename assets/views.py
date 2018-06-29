@@ -1,10 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.shortcuts import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+
+from django.views.generic.base import View
+
 from . import models
 from . import asset_handler
 # Create your views here.
+
 
 @csrf_exempt
 def report(request):
@@ -17,7 +21,7 @@ def report(request):
     if request.method == "POST":
         asset_data = request.POST.get('asset_data')
         data = json.loads(asset_data)
-        # 各种数据检查，请自行添加和完善！
+        # 各种数据检查
         if not data:
             return HttpResponse("没有数据！")
         if not issubclass(dict, type(data)):
@@ -30,7 +34,7 @@ def report(request):
             asset_obj = models.Asset.objects.filter(sn=sn)
             if asset_obj:
                 # 进入已上线资产的数据更新流程
-                pass
+                update_asset = asset_handler.UpdateAsset(request, asset_obj[0], data)
                 return HttpResponse("资产数据已经更新！")
             else:   # 如果已上线资产中没有，那么说明是未批准资产，进入新资产待审批区，更新或者创建资产。
                 obj = asset_handler.NewAsset(request, data)
@@ -40,3 +44,38 @@ def report(request):
             return HttpResponse("没有资产sn序列号，请检查数据！")
     if request.method == "GET":
         return HttpResponse("nothing")
+
+
+class IndexView(View):
+    def get(self, request):
+        assets = models.Asset.objects.all()
+        return render(request, 'index.html', {'assets':assets})
+
+
+class DashboardView(View):
+    def get(self, request):
+        total = models.Asset.objects.count()
+        upline = models.Asset.objects.filter(status=0).count()
+        offline = models.Asset.objects.filter(status=1).count()
+        unknown = models.Asset.objects.filter(status=2).count()
+        breakdown = models.Asset.objects.filter(status=3).count()
+        backup = models.Asset.objects.filter(status=4).count()
+        up_rate = round(upline / total * 100)
+        o_rate = round(offline / total * 100)
+        un_rate = round(unknown / total * 100)
+        bd_rate = round(breakdown / total * 100)
+        bu_rate = round(backup / total * 100)
+        server_number = models.Server.objects.count()
+        networkdevice_number = models.NetworkDevice.objects.count()
+        storagedevice_number = models.StorageDevice.objects.count()
+        securitydevice_number = models.SecurityDevice.objects.count()
+        software_number = models.Software.objects.count()
+        return render(request, 'dashboard.html', locals())
+
+
+class DetailView(View):
+    def get(self, request, asset_id):
+        asset = get_object_or_404(models.Asset, id=asset_id)
+        return render(request, 'detail.html', {'asset': asset})
+
+

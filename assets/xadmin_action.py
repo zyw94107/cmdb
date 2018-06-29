@@ -17,6 +17,10 @@ class PassAction(BaseActionView):
         # for obj in queryset:
         #      # obj 的操作
         # # 返回 HttpResponse
+        success_num = 0
         for qs in queryset:
-            obj = asset_handler.ApproveAsset(qs)
-        return HttpResponse(queryset)
+            obj = asset_handler.ApproveAsset(qs, self.request)
+            ret = obj.asset_upline()
+            if ret:
+                success_num += 1
+        self.message_user(self.request, "成功批准 %s 条新资产上线！" % success_num)
